@@ -5,12 +5,12 @@
    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
    version="2.5">
   <servlet>
-    <servlet-name>Hello</servlet-name>
-    <servlet-class>ml.davvs.HelloServlet</servlet-class>
+    <servlet-name>Tournament</servlet-name>
+    <servlet-class>ml.davvs.TournamentServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Hello</servlet-name>
-    <url-pattern>/hello/*</url-pattern>
+    <servlet-name>Tournament</servlet-name>
+    <url-pattern>/tourn/*</url-pattern>
   </servlet-mapping>
 </web-app>
 

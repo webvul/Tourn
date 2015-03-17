@@ -7,7 +7,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
  
-public class HelloWorld extends AbstractHandler
+public class RootHandler extends AbstractHandler
 {
     public void handle(String target,
                        Request baseRequest,
@@ -24,7 +24,7 @@ public class HelloWorld extends AbstractHandler
     public static void main(String[] args) throws Exception
     {
         Server server = new Server(8080);
-        server.setHandler(new HelloWorld());
+        server.setHandler(new RootHandler());
  
         server.start();
         server.join();
