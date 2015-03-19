@@ -19,6 +19,19 @@
       <artifactId>jetty-server</artifactId>
       <version>${jettyVersion}</version>
     </dependency>
+    <!--
+    <dependency>
+	  <groupId>com.netflix.astyanax</groupId>
+	  <artifactId>astyanax-cassandra</artifactId>
+	  <version>1.56.28</version>
+	</dependency>
+	<dependency>
+	  <groupId>com.netflix.astyanax</groupId>
+	  <artifactId>astyanax-thrift</artifactId>
+	  <version>1.56.28</version>
+	</dependency>
+	-->
+	
   </dependencies>
  
   <build>
