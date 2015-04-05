@@ -4,13 +4,14 @@
  
   <modelVersion>4.0.0</modelVersion>
   <groupId>ml.davvs</groupId>
-  <artifactId>hello-world</artifactId>
+  <artifactId>tourn</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Jetty HelloWorld</name>
+  <name>Tourn</name>
  
   <properties>
     <jettyVersion>7.2.0.v20101020</jettyVersion>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
  
   <dependencies>
@@ -19,19 +20,12 @@
       <artifactId>jetty-server</artifactId>
       <version>${jettyVersion}</version>
     </dependency>
-    <!--
     <dependency>
-	  <groupId>com.netflix.astyanax</groupId>
-	  <artifactId>astyanax-cassandra</artifactId>
-	  <version>1.56.28</version>
+  		<groupId>com.datastax.cassandra</groupId>
+  		<artifactId>cassandra-driver-core</artifactId>
+  		<version>2.1.5</version>
 	</dependency>
-	<dependency>
-	  <groupId>com.netflix.astyanax</groupId>
-	  <artifactId>astyanax-thrift</artifactId>
-	  <version>1.56.28</version>
-	</dependency>
-	-->
-	
+    	
   </dependencies>
  
   <build>

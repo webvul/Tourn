@@ -6,7 +6,7 @@
    version="2.5">
   <servlet>
     <servlet-name>Tournament</servlet-name>
-    <servlet-class>ml.davvs.TournamentServlet</servlet-class>
+    <servlet-class>ml.davvs.tourn.TournamentServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Tournament</servlet-name>
