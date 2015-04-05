@@ -7,7 +7,21 @@ public class Division {
 	private int level;
 	private int playerCount;
 	private String name;
+	private QualifierGroup upperQualifierGroup;
+	private QualifierGroup lowerQualifierGroup;
 
+	public QualifierGroup getUpperQualifierGroup() {
+		return upperQualifierGroup;
+	}
+	public void setUpperQualifierGroup(QualifierGroup upperQualifierGroup) {
+		this.upperQualifierGroup = upperQualifierGroup;
+	}
+	public QualifierGroup getLowerQualifierGroup() {
+		return lowerQualifierGroup;
+	}
+	public void setLowerQualifierGroup(QualifierGroup lowerQualifierGroup) {
+		this.lowerQualifierGroup = lowerQualifierGroup;
+	}
 	public String toString() {
 		return name;
 	}

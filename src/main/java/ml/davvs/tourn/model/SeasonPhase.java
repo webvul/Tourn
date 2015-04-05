@@ -11,9 +11,9 @@ public enum SeasonPhase {
 	FINISHED //Season is finished
 ;
 
-	public static void assertPhase(SeasonPhase currentPhase, SeasonPhase requiredPhase) throws SeasonPhaseException {
+	public static void assertPhase(SeasonPhase currentPhase, SeasonPhase requiredPhase) throws SeasonPhaseRequiredException {
 		if (currentPhase != requiredPhase){
-			throw new SeasonPhaseException(currentPhase, requiredPhase);
+			throw new SeasonPhaseRequiredException(currentPhase, requiredPhase);
 		}
 	}
 }

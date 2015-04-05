@@ -9,20 +9,12 @@ public class Subdivision {
 	private int siblingNumber;
 	private int siblings;
 	private Division division;
-	private QualifierGroup qualifierGroup;
-
 	
 	public ArrayList<GameRound> getGameRounds() {
 		return gameRounds;
 	}
 	public void setGameRounds(ArrayList<GameRound> gameRounds) {
 		this.gameRounds = gameRounds;
-	}
-	public QualifierGroup getQualifierGroup() {
-		return qualifierGroup;
-	}
-	public void setQualifierGroup(QualifierGroup qualifierGroup) {
-		this.qualifierGroup = qualifierGroup;
 	}
 
 	public String toString() {

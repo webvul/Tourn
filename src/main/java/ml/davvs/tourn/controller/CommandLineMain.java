@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import ml.davvs.tourn.model.DatabaseManager;
 import ml.davvs.tourn.model.Division;
 import ml.davvs.tourn.model.Season;
-import ml.davvs.tourn.model.SeasonPhaseException;
+import ml.davvs.tourn.model.SeasonPhaseRequiredException;
 import ml.davvs.tourn.model.Subdivision;
 import ml.davvs.tourn.model.Team;
 import ml.davvs.tourn.model.TeamSeasonStats;
@@ -16,7 +16,7 @@ import com.datastax.driver.core.schemabuilder.CreateType;
 
 public class CommandLineMain {
 
-	public static void main(String[] args) throws SeasonPhaseException {
+	public static void main(String[] args) throws SeasonPhaseRequiredException {
 
 		ConsoleOut consoleOut = new ConsoleOut();
 		DatabaseManager dbManager = new DatabaseManager();
@@ -45,7 +45,7 @@ public class CommandLineMain {
         return teams;
 	}
 	
-	public static Tournament createTournament() throws SeasonPhaseException {
+	public static Tournament createTournament() throws SeasonPhaseRequiredException {
 		int subDivisionSiblingMax = 3;
 		int targetPlayersPerDivision = 6;
 		Tournament tnm = new Tournament();
@@ -59,7 +59,7 @@ public class CommandLineMain {
 		season1.sortTeams(teams);
 		season1.setTeams(teams);
 		season1.createDivisions(teams.size(), subDivisionSiblingMax, targetPlayersPerDivision);
-		season1.distributeTeams(teams);
+		season1.distributeTeams();
 		season1.generateGames();
 
 		

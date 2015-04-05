@@ -15,11 +15,13 @@ public class Season {
 	private Cup cup;
 	private ArrayList<Game> placementMatches;
 	private Tournament tournament;
-
+	private SeasonPhaseGuard phaseGuard;
+	
 	public SeasonPhase getCurrentPhase() {
 		return currentPhase;
 	}
-	public void setCurrentPhase(SeasonPhase currentPhase) {
+	public void setCurrentPhase(SeasonPhase currentPhase) throws SeasonPhaseGuardException {
+		phaseGuard.assertSwitchPhaseIsOK(currentPhase);
 		this.currentPhase = currentPhase;
 	}
 	public Tournament getTournament() {
@@ -49,7 +51,7 @@ public class Season {
 	public ArrayList<Team> getTeams() {
 		return teams;
 	}
-	public void setTeams(ArrayList<Team> teams) throws SeasonPhaseException {
+	public void setTeams(ArrayList<Team> teams) throws SeasonPhaseRequiredException {
 		SeasonPhase.assertPhase(currentPhase, SeasonPhase.PREPARATION);
 		this.teams = teams;
 	}
@@ -68,9 +70,10 @@ public class Season {
 	
 	public Season() {
 		currentPhase = SeasonPhase.PREPARATION;
+		phaseGuard = new SeasonPhaseGuard(this);
 	}
 	
-	public void sortTeams (ArrayList<Team> teams) throws SeasonPhaseException {
+	public void sortTeams (ArrayList<Team> teams) throws SeasonPhaseRequiredException {
 		SeasonPhase.assertPhase(currentPhase, SeasonPhase.PREPARATION);
 
 		Collections.sort(teams, new Comparator<Team>() {
@@ -87,7 +90,7 @@ public class Season {
 	    });
 	}
 
-	public void generateGames() throws SeasonPhaseException{
+	public void generateGames() throws SeasonPhaseRequiredException{
 		SeasonPhase.assertPhase(currentPhase, SeasonPhase.SEASONPREP);
 
 		for (Division division : divisions) {
@@ -97,15 +100,15 @@ public class Season {
 		}
 	}
 
-	public void distributeTeams(ArrayList<Team> sortedTeams) throws SeasonPhaseException{
-		SeasonPhase.assertPhase(currentPhase, SeasonPhase.SEASONPREP);
+	public void distributeTeams() throws SeasonPhaseRequiredException{
+		SeasonPhase.assertPhase(currentPhase, SeasonPhase.QUALIFIERSPREP);
 
-		int restPlayersTotal = sortedTeams.size() % subdivisionCount;
+		int restPlayersTotal = teams.size() % subdivisionCount;
 		int restPlayersToDistribute = restPlayersTotal;
 		int nextTeamId = 0;
 		for (int d = 0; d < divisions.size(); d++){
 			Division division = divisions.get(d);
-			int playersInDivision = division.getSubDivisions().size() * sortedTeams.size() / subdivisionCount;
+			int playersInDivision = division.getSubDivisions().size() * teams.size() / subdivisionCount;
 			if (restPlayersToDistribute > division.getSubDivisions().size()) {
 				playersInDivision += division.getSubDivisions().size();
 				restPlayersToDistribute -= division.getSubDivisions().size();
@@ -119,7 +122,7 @@ public class Season {
 			while (playersInDivision > 0){
 				int subdivisionId = s % division.getSubDivisions().size();
 				Subdivision subdivision = division.getSubDivisions().get(subdivisionId);
-				Team team = sortedTeams.get(nextTeamId);
+				Team team = teams.get(nextTeamId);
 				TeamSeasonStats teamSeasonStats = team.getCurrentSeason();
 				assert(teamSeasonStats.getSubDivision() == null);
 				teamSeasonStats.setCup(null);
@@ -135,36 +138,43 @@ public class Season {
 				s++;
 			}
 		}
-		assert(nextTeamId == sortedTeams.size() && restPlayersToDistribute == 0);
+		assert(nextTeamId == teams.size() && restPlayersToDistribute == 0);
 	}
 
-	public void createDivisions(int teams, int subdivisionSiblingsMax, int targetPlayersPerDivision) throws SeasonPhaseException {
+	public void createDivisions(int teams, int subdivisionSiblingsMax, int minPlayersPerDivision) throws SeasonPhaseRequiredException {
 		SeasonPhase.assertPhase(currentPhase, SeasonPhase.QUALIFIERSPREP);
 
-		subdivisionCount = (int) Math.ceil((float)teams / targetPlayersPerDivision);
+		subdivisionCount = (int) Math.floor((float)teams / minPlayersPerDivision);
 
 		int midSubdivisions = subdivisionCount == 1 ? 0 : subdivisionCount - 2;
 		int midDivisions;
-        int midDivisionLevelsRest;
+        int subdivisionRestRemaining = 0;
         int midSubdivisionsBase;
 		if (midSubdivisions == 0){
         	midDivisions = 0;
-        	midDivisionLevelsRest = 0;
+        	subdivisionRestRemaining = 0;
         	midSubdivisionsBase = 0;
 		} else {
+			
 			midDivisions = 1 + (midSubdivisions-1) / subdivisionSiblingsMax;
-        	midDivisionLevelsRest = midSubdivisions % subdivisionSiblingsMax; // The number of middivisions to have an extra sibling
-        	if (midDivisionLevelsRest == 0){
-        		midSubdivisionsBase = subdivisionSiblingsMax;
-        	} else {
-        		midSubdivisionsBase = subdivisionSiblingsMax - 1;
-        	}
+			int subdivisionsPerDivision = midSubdivisions / midDivisions;
+			subdivisionRestRemaining = midSubdivisions - (subdivisionsPerDivision * midDivisions); // The number of middivisions to have an extra sibling
+    		midSubdivisionsBase = subdivisionsPerDivision;
 		}
-        int subdivisionRestRemaining = midDivisionLevelsRest;
         int divisionCount = subdivisionCount == 1 ? 1 : midDivisions + 2;
         divisions = new ArrayList<Division>();
+        QualifierGroup upperQualifierGroup = null;
 		for (int d = 0; d < divisionCount; d++){
 			Division division = new Division();
+			QualifierGroup qualifierGroup = new QualifierGroup();
+			if (d + 1 < divisionCount) {
+				qualifierGroup.setUpperDivision(division);
+				division.setLowerQualifierGroup(qualifierGroup);
+			}
+			if (upperQualifierGroup != null){
+				upperQualifierGroup.setLowerDivision(division);
+				division.setUpperQualifierGroup(upperQualifierGroup);
+			}
 			int currentDivisionLevel = divisionCount - d;
 			division.setLevel(currentDivisionLevel);
 			if (d==0){
@@ -172,6 +182,7 @@ public class Season {
 			} else {
 				division.setName("Division " + d);
 			}
+			qualifierGroup.setName("Promotion to " + division.getName() + " Qualifier group");
 			division.setSubDivisions(new ArrayList<Subdivision>());
 			int currentSubdivisions = 0;
 			if (d == 0 || d == divisionCount - 1) {
@@ -190,7 +201,7 @@ public class Season {
 				subdivision.setGameRounds(new ArrayList<GameRound>());
 				subdivision.setDivision(division);
 				subdivision.setSiblingNumber(s);
-				subdivision.setQualifierGroup(null);
+
 				if (s > 25){
 					throw new RuntimeException("Unable to make up subdivision sibling letter");
 				}
@@ -199,6 +210,7 @@ public class Season {
 			}
 
 			divisions.add(division);
+			upperQualifierGroup = qualifierGroup;
 		}
     }
 		
