@@ -3,7 +3,6 @@ package ml.davvs.tourn.controller;
 import java.util.ArrayList;
 
 import ml.davvs.tourn.model.DatabaseManager;
-import ml.davvs.tourn.model.Division;
 import ml.davvs.tourn.model.Season;
 import ml.davvs.tourn.model.SeasonPhaseRequiredException;
 import ml.davvs.tourn.model.Subdivision;
@@ -11,8 +10,6 @@ import ml.davvs.tourn.model.Team;
 import ml.davvs.tourn.model.TeamSeasonStats;
 import ml.davvs.tourn.model.Tournament;
 import ml.davvs.tourn.view.ConsoleOut;
-
-import com.datastax.driver.core.schemabuilder.CreateType;
 
 public class CommandLineMain {
 
@@ -36,11 +33,14 @@ public class CommandLineMain {
 		dbManager.close();
 	}
 
-	private static ArrayList<Team> createTestTeams() {
-		ArrayList<Team> teams = new ArrayList<Team>();
+	private static ArrayList<TeamSeasonStats> createTestTeams() {
+		ArrayList<TeamSeasonStats> teams = new ArrayList<TeamSeasonStats>();
 		int numberOfTeams = 2;
 		for (int a = 1; a <= numberOfTeams; a++) {
-			teams.add(new Team("team" + a, "team" + a + "@davvs.ml", (float)Math.round(Math.random()*100)/10));
+			Team team = new Team("team" + a, "team" + a + "@davvs.ml", (float)Math.round(Math.random()*100)/10); 
+			TeamSeasonStats ts = new TeamSeasonStats();
+			ts.setTeam(team);
+			teams.add(ts);
 		}
         return teams;
 	}
@@ -51,7 +51,7 @@ public class CommandLineMain {
 		Tournament tnm = new Tournament();
 		tnm.setName("Testo tournamento League");
 		ArrayList<Season> seasons = new ArrayList<Season>();
-		ArrayList<Team> teams = createTestTeams();
+		ArrayList<TeamSeasonStats> teams = createTestTeams();
 		Season season1 = new Season();
 		season1.setCup(null);
 		season1.setTournament(tnm);
@@ -62,10 +62,8 @@ public class CommandLineMain {
 		season1.distributeTeams();
 		season1.generateGames();
 
-		
 		seasons.add(season1);
 		tnm.setSeasons(seasons);
-		tnm.setTeams(teams);
 		return tnm;
 	}
 }

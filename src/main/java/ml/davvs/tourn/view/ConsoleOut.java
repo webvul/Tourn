@@ -8,6 +8,19 @@ import ml.davvs.tourn.model.Subdivision;
 import ml.davvs.tourn.model.TeamSeasonStats;
 
 public class ConsoleOut {
+	
+	public void printAllTeams(Season s) {
+		for (TeamSeasonStats ts : s.getTeams()){
+			String qs = "";
+			if (ts.getQualifierGroup() != null){
+				qs = " Qualifier:" + ts.getQualifierGroup().getName();
+			}
+			System.out.println(ts.getTeam().getStaticInfo().getName() + " " +
+					"Division: " + ts.getSubDivision().getName() +
+					qs);
+		}
+	}
+
 	public void printGamesForSubdivision(final Subdivision subdivision, final String prefix) {
 		ArrayList<TeamSeasonStats> teams = subdivision.getTeams();
 		for (int p = 0; p < teams.size(); p++) {

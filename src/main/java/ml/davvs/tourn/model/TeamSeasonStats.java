@@ -41,8 +41,14 @@ public class TeamSeasonStats {
 	public QualifierGroup getQualifierGroup() {
 		return qualifierGroup;
 	}
-	public void setQualifierGroup(QualifierGroup qualifierGroup) {
+	public void setQualifierGroup(QualifierGroup qualifierGroup) throws QualifierGroupException {
+		if (qualifierGroup.getUpperDivision() != getSubDivision().getDivision() &&
+				qualifierGroup.getLowerDivision() != getSubDivision().getDivision()){
+			throw new QualifierGroupException("Team " + team.getStaticInfo().getName() + " is in " + getSubDivision().getDivision().getName() + " which is too far away to qualify " +
+				" to " + qualifierGroup.getName());
+		}
 		this.qualifierGroup = qualifierGroup;
+		qualifierGroup.addTeam(this);
 	}
 	public ArrayList<Game> getPlacementMatches() {
 		return placementMatches;

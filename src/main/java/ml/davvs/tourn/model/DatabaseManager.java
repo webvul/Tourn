@@ -1,7 +1,5 @@
 package ml.davvs.tourn.model;
 
-import java.util.ArrayList;
-
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Host;
 import com.datastax.driver.core.Metadata;

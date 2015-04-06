@@ -28,11 +28,11 @@ public class QualifierGroup {
 	public void setLowerDivision(Division lowerDivision) {
 		this.lowerDivision = lowerDivision;
 	}
-	public ArrayList<TeamSeasonStats> getTeams() {
+	public final ArrayList<TeamSeasonStats> getTeams() {
 		return teams;
 	}
-	public void setTeams(ArrayList<TeamSeasonStats> teams) {
-		this.teams = teams;
+	public void addTeam(TeamSeasonStats ts) {
+		teams.add(ts);
 	}
 	
 	public QualifierGroup() {

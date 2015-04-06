@@ -16,7 +16,10 @@ public class Division {
 	public void setUpperQualifierGroup(QualifierGroup upperQualifierGroup) {
 		this.upperQualifierGroup = upperQualifierGroup;
 	}
-	public QualifierGroup getLowerQualifierGroup() {
+	public QualifierGroup getLowerQualifierGroup() throws QualifierGroupException {
+		if (lowerQualifierGroup == null) {
+			throw new QualifierGroupException("Qualifier group to " + getName() + " does not exist");
+		}
 		return lowerQualifierGroup;
 	}
 	public void setLowerQualifierGroup(QualifierGroup lowerQualifierGroup) {

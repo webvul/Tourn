@@ -11,6 +11,7 @@ import org.junit.Test;
 import ml.davvs.tourn.model.Game;
 import ml.davvs.tourn.model.GameRound;
 import ml.davvs.tourn.model.QualifierGroup;
+import ml.davvs.tourn.model.QualifierGroupException;
 import ml.davvs.tourn.model.Season;
 import ml.davvs.tourn.model.SeasonPhase;
 import ml.davvs.tourn.model.SeasonPhaseGuardException;
@@ -18,13 +19,13 @@ import ml.davvs.tourn.model.SeasonPhaseRequiredException;
 import ml.davvs.tourn.model.Subdivision;
 import ml.davvs.tourn.model.Team;
 import ml.davvs.tourn.model.TeamSeasonStats;
-import ml.davvs.tourn.model.TeamStaticInfo;
 import ml.davvs.tourn.model.Tournament;
+import ml.davvs.tourn.view.ConsoleOut;
 
 public class SeasonTest {
 	private Season s;
 	private Tournament tournament;
-	private ArrayList<Team> teams;
+	private ArrayList<TeamSeasonStats> teams;
 
 	@Before
 	public void setUp() throws Exception {
@@ -32,7 +33,7 @@ public class SeasonTest {
 		tournament = new Tournament();
 		tournament.setName("Test Tournament");
 		s.setTournament(tournament);
-		teams = new ArrayList<Team>();
+		teams = new ArrayList<TeamSeasonStats>();
 	}
 
 	@After
@@ -42,7 +43,9 @@ public class SeasonTest {
 	private void setUpTeams(final int teamCount) {
 		for (int t = 0; t < teamCount; t++) {
 			Team team = new Team("team" + t, "team" + t + "@example.com", 0.5f * t);
-			teams.add(team);
+			TeamSeasonStats ts = new TeamSeasonStats();
+			ts.setTeam(team);
+			teams.add(ts);
 		}
 	}
 
@@ -158,15 +161,15 @@ public class SeasonTest {
 	}
 
 	private void assertAllExpectedGamesAreScheduled() throws SeasonPhaseRequiredException {
-		for (Team t : s.getTeams()) {
-			Subdivision sd = t.getCurrentSeason().getSubDivision();
+		for (TeamSeasonStats t : s.getTeams()) {
+			Subdivision sd = t.getSubDivision();
 			ArrayList<TeamSeasonStats> subdivisionMembersRemaining = (ArrayList<TeamSeasonStats>) sd.getTeams().clone();
 			for (GameRound gr : sd.getGameRounds()) {
 				for (Game game : gr.getGames()){
 					TeamSeasonStats opponent = null;
-					if (game.getHomeTeam() == t.getCurrentSeason()) {
+					if (game.getHomeTeam() == t) {
 						opponent = game.getAwayTeam();
-					} else if (game.getAwayTeam() == t.getCurrentSeason()) {
+					} else if (game.getAwayTeam() == t) {
 						opponent = game.getHomeTeam();
 					}
 					if (opponent != null) {
@@ -185,7 +188,7 @@ public class SeasonTest {
 			}
 	
 			assertEquals(1,subdivisionMembersRemaining.size());
-			assertEquals(t.getCurrentSeason(), subdivisionMembersRemaining.get(0));
+			assertEquals(t, subdivisionMembersRemaining.get(0));
 		}
 	}
 
@@ -217,7 +220,7 @@ public class SeasonTest {
 	}
 	
 	@Test
-	public void testQualifierGroupCoversOnlyOneDivision() throws SeasonPhaseRequiredException, SeasonPhaseGuardException {
+	public void testQualifierGroupCoversOnlyOneDivision() throws SeasonPhaseRequiredException, SeasonPhaseGuardException, QualifierGroupException {
 		setUpTeams(8);
 		s.sortTeams(teams);
 		s.setTeams(teams);
@@ -225,8 +228,8 @@ public class SeasonTest {
 		s.createDivisions(teams.size(), 2, 4);
 		s.distributeTeams();
 		QualifierGroup qualifierGroup = s.getDivisions().get(0).getLowerQualifierGroup();
-		TeamSeasonStats t1 = s.getTeams().get(0).getCurrentSeason();
-		TeamSeasonStats t2 = s.getTeams().get(1).getCurrentSeason();
+		TeamSeasonStats t1 = s.getTeams().get(0);
+		TeamSeasonStats t2 = s.getTeams().get(1);
 		t1.setQualifierGroup(qualifierGroup);
 		t2.setQualifierGroup(qualifierGroup);
 		qualifierGroup.getTeams().add(t1);
@@ -243,7 +246,7 @@ public class SeasonTest {
 	}
 
 	@Test
-	public void testQualifierGroupCoversBothDivision() throws SeasonPhaseRequiredException, SeasonPhaseGuardException {
+	public void testQualifierGroupCoversBothDivision() throws SeasonPhaseRequiredException, SeasonPhaseGuardException, QualifierGroupException {
 		setUpTeams(8);
 		s.sortTeams(teams);
 		s.setTeams(teams);
@@ -251,8 +254,8 @@ public class SeasonTest {
 		s.createDivisions(teams.size(), 2, 4);
 		s.distributeTeams();
 		QualifierGroup qualifierGroup = s.getDivisions().get(0).getLowerQualifierGroup();
-		TeamSeasonStats t1 = s.getTeams().get(3).getCurrentSeason();
-		TeamSeasonStats t2 = s.getTeams().get(4).getCurrentSeason();
+		TeamSeasonStats t1 = s.getTeams().get(3);
+		TeamSeasonStats t2 = s.getTeams().get(4);
 		t1.setQualifierGroup(qualifierGroup);
 		t2.setQualifierGroup(qualifierGroup);
 		qualifierGroup.getTeams().add(t1);
@@ -261,7 +264,7 @@ public class SeasonTest {
 	}
 
 	@Test
-	public void testQualifierGroupCoversOnlyOneDivision2() throws SeasonPhaseRequiredException, SeasonPhaseGuardException {
+	public void testQualifierGroupCoversOnlyOneDivision2() throws SeasonPhaseRequiredException, SeasonPhaseGuardException, QualifierGroupException {
 		setUpTeams(8);
 		s.sortTeams(teams);
 		s.setTeams(teams);
@@ -269,8 +272,8 @@ public class SeasonTest {
 		s.createDivisions(teams.size(), 2, 4);
 		s.distributeTeams();
 		QualifierGroup qualifierGroup = s.getDivisions().get(0).getLowerQualifierGroup();
-		TeamSeasonStats t1 = s.getTeams().get(4).getCurrentSeason();
-		TeamSeasonStats t2 = s.getTeams().get(5).getCurrentSeason();
+		TeamSeasonStats t1 = s.getTeams().get(4);
+		TeamSeasonStats t2 = s.getTeams().get(5);
 		t1.setQualifierGroup(qualifierGroup);
 		t2.setQualifierGroup(qualifierGroup);
 		qualifierGroup.getTeams().add(t1);
@@ -284,5 +287,66 @@ public class SeasonTest {
 			fail("Wrong exception called " + e.getMessage());
 		}
 		fail("Exception not thrown");
+	}
+	
+	@Test (expected=QualifierGroupException.class)
+	public void testQualifiersInvalidQualfierGroup() throws SeasonPhaseRequiredException, SeasonPhaseGuardException, QualifierGroupException {
+		setUpTeams(16);
+		s.sortTeams(teams);
+		s.setTeams(teams);
+		s.setCurrentPhase(SeasonPhase.QUALIFIERSPREP);
+		s.createDivisions(teams.size(), 2, 4);
+		s.distributeTeams();
+		QualifierGroup qualifierGroup = s.getDivisions().get(0).getLowerQualifierGroup();
+		s.getTeams().get(3).setQualifierGroup(qualifierGroup);
+		s.getTeams().get(4).setQualifierGroup(qualifierGroup);
+		
+		s.getTeams().get(9).setQualifierGroup(qualifierGroup);
+		s.getTeams().get(10).setQualifierGroup(qualifierGroup);
+
+		s.getTeams().get(11).setQualifierGroup(qualifierGroup);
+		s.getTeams().get(12).setQualifierGroup(qualifierGroup);
+
+		s.setCurrentPhase(SeasonPhase.QUALIFIERS);
+		
+		ConsoleOut consoleOut = new ConsoleOut();
+		consoleOut.printAllTeams(s);
+	}
+	
+	@Test
+	public void testQualifiersPrint() throws SeasonPhaseRequiredException, SeasonPhaseGuardException, QualifierGroupException {
+		setUpTeams(16);
+		s.sortTeams(teams);
+		s.setTeams(teams);
+		s.setCurrentPhase(SeasonPhase.QUALIFIERSPREP);
+		s.createDivisions(teams.size(), 2, 4);
+		s.distributeTeams();
+		QualifierGroup qualifierGroup = s.getDivisions().get(0).getLowerQualifierGroup();
+		s.getTeams().get(3).setQualifierGroup(qualifierGroup);
+		s.getTeams().get(4).setQualifierGroup(qualifierGroup);
+		
+		QualifierGroup qualifierGroupBotton = s.getDivisions().get(1).getLowerQualifierGroup();
+
+		s.getTeams().get(9).setQualifierGroup(qualifierGroupBotton);
+		s.getTeams().get(10).setQualifierGroup(qualifierGroupBotton);
+
+		s.getTeams().get(11).setQualifierGroup(qualifierGroupBotton);
+		s.getTeams().get(12).setQualifierGroup(qualifierGroupBotton);
+
+		s.setCurrentPhase(SeasonPhase.QUALIFIERS);
+		
+		ConsoleOut consoleOut = new ConsoleOut();
+		consoleOut.printAllTeams(s);
+	}
+
+	@Test(expected=QualifierGroupException.class)
+	public void testQualifiersQualifierGroupMissing() throws SeasonPhaseRequiredException, SeasonPhaseGuardException, QualifierGroupException {
+		setUpTeams(16);
+		s.sortTeams(teams);
+		s.setTeams(teams);
+		s.setCurrentPhase(SeasonPhase.QUALIFIERSPREP);
+		s.createDivisions(teams.size(), 2, 4);
+		s.distributeTeams();
+		s.getDivisions().get(2).getLowerQualifierGroup();
 	}
 }

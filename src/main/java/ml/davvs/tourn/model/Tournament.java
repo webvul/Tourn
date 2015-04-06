@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Tournament {
 	private String name;
 	private ArrayList<Season> seasons;
-	private ArrayList<Team> teams;
 
 	public String getName() {
 		return name;
@@ -18,11 +17,5 @@ public class Tournament {
 	}
 	public void setSeasons(ArrayList<Season> seasons) {
 		this.seasons = seasons;
-	}
-	public ArrayList<Team> getTeams() {
-		return teams;
-	}
-	public void setTeams(ArrayList<Team> teams) {
-		this.teams = teams;
 	}
 }

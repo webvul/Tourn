@@ -1,7 +1,6 @@
 package ml.davvs.tourn.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -9,7 +8,7 @@ public class Season {
 
 	private SeasonPhase currentPhase;
 	private ArrayList<Division> divisions;
-	private ArrayList<Team> teams;
+	private ArrayList<TeamSeasonStats> teams;
 	private int playerCount;
 	private int subdivisionCount;
 	private Cup cup;
@@ -48,10 +47,10 @@ public class Season {
 	public void setDivisions(ArrayList<Division> divisions) {
 		this.divisions = divisions;
 	}
-	public ArrayList<Team> getTeams() {
+	public ArrayList<TeamSeasonStats> getTeams() {
 		return teams;
 	}
-	public void setTeams(ArrayList<Team> teams) throws SeasonPhaseRequiredException {
+	public void setTeams(ArrayList<TeamSeasonStats> teams) throws SeasonPhaseRequiredException {
 		SeasonPhase.assertPhase(currentPhase, SeasonPhase.PREPARATION);
 		this.teams = teams;
 	}
@@ -73,18 +72,18 @@ public class Season {
 		phaseGuard = new SeasonPhaseGuard(this);
 	}
 	
-	public void sortTeams (ArrayList<Team> teams) throws SeasonPhaseRequiredException {
+	public void sortTeams (ArrayList<TeamSeasonStats> teams) throws SeasonPhaseRequiredException {
 		SeasonPhase.assertPhase(currentPhase, SeasonPhase.PREPARATION);
 
-		Collections.sort(teams, new Comparator<Team>() {
-	        public int compare(Team t1, Team t2)
+		Collections.sort(teams, new Comparator<TeamSeasonStats>() {
+	        public int compare(TeamSeasonStats t1, TeamSeasonStats t2)
 	        {
-	        	int eloDiff = t1.getLastElo() - t2.getLastElo();
+	        	int eloDiff = t1.getElo() - t2.getElo();
 	        	if (eloDiff != 0) {
 	        		return eloDiff;
 	        	}
-	        	float t1s = t1.getCurrentSeason().getGuessedSkill();
-	        	float t2s = t2.getCurrentSeason().getGuessedSkill();
+	        	float t1s = t1.getGuessedSkill();
+	        	float t2s = t2.getGuessedSkill();
 	    		return t1s > t2s ? -1 : (t1s < t2s ? 1 : 0);
 	        }
 	    });
@@ -122,8 +121,8 @@ public class Season {
 			while (playersInDivision > 0){
 				int subdivisionId = s % division.getSubDivisions().size();
 				Subdivision subdivision = division.getSubDivisions().get(subdivisionId);
-				Team team = teams.get(nextTeamId);
-				TeamSeasonStats teamSeasonStats = team.getCurrentSeason();
+				TeamSeasonStats teamSeasonStats = teams.get(nextTeamId);
+				Team team = teamSeasonStats.getTeam();
 				assert(teamSeasonStats.getSubDivision() == null);
 				teamSeasonStats.setCup(null);
 				teamSeasonStats.setSubDivision(subdivision);

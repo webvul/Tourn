@@ -22,8 +22,16 @@ public class SeasonPhaseGuard {
 			throw new SeasonPhaseGuardException("Trying to increment more than 1 phase! from:" + season.getCurrentPhase() + " to " + nextPhase);
 		}
 		if (nextPhase == SeasonPhase.QUALIFIERS) {
-			for (Division d : season.getDivisions()) {
-				QualifierGroup qualifierGroup = d.getLowerQualifierGroup();
+			for (int d = 0; d < season.getDivisions().size() - 1; d++) {
+				Division division = season.getDivisions().get(d);
+				
+				QualifierGroup qualifierGroup;
+				try {
+					qualifierGroup = division.getLowerQualifierGroup();
+				} catch (QualifierGroupException e) {
+					throw new SeasonPhaseGuardException("Failed to get lower qualfier group", e);
+				}
+				
 				if (qualifierGroup == null) {
 					continue;
 				}

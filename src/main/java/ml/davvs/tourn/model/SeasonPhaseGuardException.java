@@ -6,4 +6,8 @@ public class SeasonPhaseGuardException extends Exception {
 	public SeasonPhaseGuardException(String message){
 		super(message);
 	}
+
+	public SeasonPhaseGuardException(String message, Throwable previous) {
+		super(message, previous);
+	}
 }
