@@ -1,6 +1,8 @@
-package ml.davvs.tourn.model;
+package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+
+import ml.davvs.tourn.model.GameRegistrationException;
 
 public class Subdivision {
 	private String name;
@@ -51,9 +53,29 @@ public class Subdivision {
 	public void setTeams(ArrayList<TeamSeasonStats> teams) {
 		this.teams = teams;
 	}
-	
+
+	public void registerGameResult(Game game, int homeScore, int awayScore) throws GameRegistrationException {
+		boolean match = false;
+		for (GameRound gr : getGameRounds()) {
+			if (game.getRound().equals(gr)){
+				match = true;
+			}
+		}
+		if (!match) {
+			throw new GameRegistrationException("Game " + game + " does not belong in subdivision " + getName());
+		}
+		if (game.isPlayed()) {
+			throw new GameRegistrationException("Game " + game + " was already played " + getName());
+		}
+		game.setAwayScore(awayScore);
+		game.setHomeScore(homeScore);
+	}
+
 	public void generateGames() {
-		assert(gameRounds == null);
+		if(gameRounds != null) {
+			//Forget all game rounds
+			gameRounds.clear();
+		}
 		assert(teams != null && teams.size() > 1);
 		/*
 		#############
@@ -96,6 +118,10 @@ public class Subdivision {
 			}
 			gameRounds.add(gameRound);
 			
+		}
+		Season s = division.getSeason();
+		if (s.getGameRounds() < gameRounds.size()){
+			s.setGameRounds(gameRounds.size());
 		}
 	}
 }

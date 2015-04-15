@@ -1,4 +1,4 @@
-package ml.davvs.tourn.model;
+package ml.davvs.tourn.model.persisted;
 
 public class TeamStaticInfo {
 	TeamStaticInfo(String name, String email) {

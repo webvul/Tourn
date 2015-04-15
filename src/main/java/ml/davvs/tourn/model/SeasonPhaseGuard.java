@@ -2,6 +2,11 @@ package ml.davvs.tourn.model;
 
 import java.util.ArrayList;
 
+import ml.davvs.tourn.model.persisted.Division;
+import ml.davvs.tourn.model.persisted.QualifierGroup;
+import ml.davvs.tourn.model.persisted.Season;
+import ml.davvs.tourn.model.persisted.TeamSeasonStats;
+
 public class SeasonPhaseGuard {
 	private Season season;
 	
@@ -32,9 +37,6 @@ public class SeasonPhaseGuard {
 					throw new SeasonPhaseGuardException("Failed to get lower qualfier group", e);
 				}
 				
-				if (qualifierGroup == null) {
-					continue;
-				}
 				ArrayList<TeamSeasonStats> teams = qualifierGroup.getTeams();
 				for (TeamSeasonStats t : teams) {
 					if (t.getQualifierGroup() != qualifierGroup) {
@@ -47,6 +49,25 @@ public class SeasonPhaseGuard {
 					}
 					if (qualifierGroup.getCountTeamsLower() <= 0) {
 						throw new SeasonPhaseGuardException("Qualifier group lack teams in lower division");
+					}
+				}
+			}
+		} else if (nextPhase == SeasonPhase.SEASONPREP) {
+			for (int d = 0; d < season.getDivisions().size() - 1; d++) {
+				Division division = season.getDivisions().get(d);
+				QualifierGroup qualifierGroup;
+				try {
+					qualifierGroup = division.getLowerQualifierGroup();
+				} catch (QualifierGroupException e) {
+					throw new SeasonPhaseGuardException("Failed to get lower qualfier group", e);
+				}
+
+				if (qualifierGroup.getTeams().size() > 0){
+					if (!qualifierGroup.isFinished()) {
+						throw new SeasonPhaseGuardException("Qualifier group " + qualifierGroup.getName() + " is not completed");
+					} else if (qualifierGroup.isStartedPlaying()) {
+						// TODO Make sure we verify that the qualfier group is resolved/played
+						throw new SeasonPhaseGuardException("Qualifier group " + qualifierGroup.getName() + " is not played");
 					}
 				}
 			}

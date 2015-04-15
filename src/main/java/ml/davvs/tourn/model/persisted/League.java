@@ -1,11 +1,11 @@
-package ml.davvs.tourn.model;
+package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
 
-public class Tournament {
+public class League {
 	private String name;
 	private ArrayList<Season> seasons;
-
+	private ArrayList<Cup> cups;
 	public String getName() {
 		return name;
 	}
@@ -18,4 +18,12 @@ public class Tournament {
 	public void setSeasons(ArrayList<Season> seasons) {
 		this.seasons = seasons;
 	}
+	public ArrayList<Cup> getCups() {
+		return cups;
+	}
+	public void setCups(ArrayList<Cup> cups) {
+		this.cups = cups;
+	}
+	
+	
 }

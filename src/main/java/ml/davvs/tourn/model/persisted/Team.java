@@ -1,4 +1,4 @@
-package ml.davvs.tourn.model;
+package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
 
@@ -7,8 +7,10 @@ public class Team {
 	private ArrayList<TeamSeasonStats> seasonStats;
 	
 	public Team(String name, String email, float guessedSkill){
+		//TODO Check and see if this team already exists
 		this.staticInfo = new TeamStaticInfo(name, email);
 		TeamSeasonStats currentSeason = new TeamSeasonStats();
+		currentSeason.setTeam(this);
 		currentSeason.setGuessedSkill(guessedSkill);
 		this.seasonStats = new ArrayList<TeamSeasonStats>();
 		this.seasonStats.add(currentSeason);

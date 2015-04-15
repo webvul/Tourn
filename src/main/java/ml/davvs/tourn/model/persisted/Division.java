@@ -1,6 +1,8 @@
-package ml.davvs.tourn.model;
+package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+
+import ml.davvs.tourn.model.QualifierGroupException;
 
 public class Division {
 	private ArrayList<Subdivision> subDivisions;
@@ -9,7 +11,17 @@ public class Division {
 	private String name;
 	private QualifierGroup upperQualifierGroup;
 	private QualifierGroup lowerQualifierGroup;
-
+	private Season season;
+	
+	public Division(Season s) {
+		season = s;
+	}
+	public Season getSeason() {
+		return season;
+	}
+	public void setSeason(Season season) {
+		this.season = season;
+	}
 	public QualifierGroup getUpperQualifierGroup() {
 		return upperQualifierGroup;
 	}

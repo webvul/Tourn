@@ -1,6 +1,8 @@
-package ml.davvs.tourn.model;
+package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+
+import ml.davvs.tourn.model.QualifierGroupException;
 
 //Between each division there will be a qualifier group.
 //The best of the group will be qualified to the upper division. 
@@ -9,7 +11,21 @@ public class QualifierGroup {
 	private ArrayList<TeamSeasonStats> teams;
 	private Division upperDivision;
 	private Division lowerDivision;
+	private boolean finished;
+	private boolean startedPlaying;
 
+	public boolean isStartedPlaying() {
+		return startedPlaying;
+	}
+	public void setStartedPlaying(boolean startedPlaying) {
+		this.startedPlaying = startedPlaying;
+	}
+	public boolean isFinished() {
+		return finished;
+	}
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
 	public String getName() {
 		return name;
 	}
@@ -31,8 +47,12 @@ public class QualifierGroup {
 	public final ArrayList<TeamSeasonStats> getTeams() {
 		return teams;
 	}
-	public void addTeam(TeamSeasonStats ts) {
+	public void addTeam(TeamSeasonStats ts) throws QualifierGroupException {
+		if (startedPlaying) {
+			throw new QualifierGroupException("Unable to add team while qualifier group is playing");
+		}
 		teams.add(ts);
+		finished = false;
 	}
 	
 	public QualifierGroup() {

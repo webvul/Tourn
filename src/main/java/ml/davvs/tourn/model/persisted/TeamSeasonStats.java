@@ -1,6 +1,8 @@
-package ml.davvs.tourn.model;
+package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+
+import ml.davvs.tourn.model.QualifierGroupException;
 
 // Every time a team is participating in a season, The player will have these stats in the season.
 // Possible created from the last season stats or from placement matches

@@ -5,12 +5,20 @@ public class SeasonPhaseRequiredException extends Exception {
 
 	private SeasonPhase current;
 	private SeasonPhase required;
+	public SeasonPhaseRequiredException(String message){
+		super(message);
+	}
+
 	public SeasonPhaseRequiredException(SeasonPhase current, SeasonPhase required){
 		this.current = current;
 		this.required = required;
 	}
 
 	public String getMessage() {
-		return "Phase " + required.toString() + " required, but current phase is " + current.toString();
+		if (required != null) {
+			return "Phase " + required.toString() + " required, but current phase is " + current.toString();
+		} else {
+			return super.getMessage();
+		}
 	}
 }

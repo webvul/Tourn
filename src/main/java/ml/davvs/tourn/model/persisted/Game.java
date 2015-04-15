@@ -1,9 +1,13 @@
-package ml.davvs.tourn.model;
+package ml.davvs.tourn.model.persisted;
+
+import java.util.UUID;
 
 public class Game {
 	// field are mutually exclusive as a game is either played in a Division, Cup, QualifierGroup or is a placementMatch
 	public enum GameTypes {DIVISION, CUP, QUALIFIER, PLACEMENT};
 	
+	private UUID id;
+
 	private TeamSeasonStats homeTeam;
 	private TeamSeasonStats awayTeam;
 	private Integer homeScore;
@@ -16,6 +20,9 @@ public class Game {
 
 	private Integer round;
 
+	public Game() {
+		int id = 0; // TODO new UUID(mostSigBits, leastSigBits) //TODO Use UUID Generator?
+	}
 	public TeamSeasonStats getHomeTeam() {
 		return homeTeam;
 	}
@@ -86,6 +93,10 @@ public class Game {
 
 	public void setRound(Integer round) {
 		this.round = round;
+	}
+
+	public boolean isPlayed() {
+		return homeScore != null && awayScore != null;
 	}
 	
 	

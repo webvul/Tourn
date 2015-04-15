@@ -8,18 +8,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ml.davvs.tourn.model.Game;
-import ml.davvs.tourn.model.GameRound;
-import ml.davvs.tourn.model.QualifierGroup;
 import ml.davvs.tourn.model.QualifierGroupException;
-import ml.davvs.tourn.model.Season;
 import ml.davvs.tourn.model.SeasonPhase;
 import ml.davvs.tourn.model.SeasonPhaseGuardException;
 import ml.davvs.tourn.model.SeasonPhaseRequiredException;
-import ml.davvs.tourn.model.Subdivision;
-import ml.davvs.tourn.model.Team;
-import ml.davvs.tourn.model.TeamSeasonStats;
-import ml.davvs.tourn.model.Tournament;
+import ml.davvs.tourn.model.persisted.Game;
+import ml.davvs.tourn.model.persisted.GameRound;
+import ml.davvs.tourn.model.persisted.QualifierGroup;
+import ml.davvs.tourn.model.persisted.Season;
+import ml.davvs.tourn.model.persisted.Subdivision;
+import ml.davvs.tourn.model.persisted.Team;
+import ml.davvs.tourn.model.persisted.TeamSeasonStats;
+import ml.davvs.tourn.model.persisted.Tournament;
 import ml.davvs.tourn.view.ConsoleOut;
 
 public class SeasonTest {
@@ -39,7 +39,7 @@ public class SeasonTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	private void setUpTeams(final int teamCount) {
 		for (int t = 0; t < teamCount; t++) {
 			Team team = new Team("team" + t, "team" + t + "@example.com", 0.5f * t);
@@ -58,8 +58,9 @@ public class SeasonTest {
 		s.setCurrentPhase(SeasonPhase.QUALIFIERSPREP);
 		s.createDivisions(teams.size(), 2, 6);
 		
-		assertEquals(1, s.getDivisions().size());
+		assertEquals(2, s.getDivisions().size());
 		assertEquals(1, s.getDivisions().get(0).getSubDivisions().size());
+		assertEquals(1, s.getDivisions().get(1).getSubDivisions().size());
 	}
 
 	@Test
@@ -101,7 +102,7 @@ public class SeasonTest {
 		s.sortTeams(teams);
 		s.setTeams(teams);
 		s.setCurrentPhase(SeasonPhase.QUALIFIERSPREP);
-		s.createDivisions(teams.size(), 2, 8);
+		s.createDivisions(teams.size(), 2, 9);
 
 		assertEquals(3, s.getDivisions().size());
 		assertEquals(1, s.getDivisions().get(0).getSubDivisions().size());
@@ -118,13 +119,15 @@ public class SeasonTest {
 		s.setCurrentPhase(SeasonPhase.QUALIFIERSPREP);
 		s.createDivisions(teams.size(), 2, 6);
 		s.distributeTeams();
-		assertEquals(1, s.getDivisions().size());
+		assertEquals(2, s.getDivisions().size());
 		assertEquals(1, s.getDivisions().get(0).getSubDivisions().size());
+		assertEquals(1, s.getDivisions().get(1).getSubDivisions().size());
 
 		s.setCurrentPhase(SeasonPhase.QUALIFIERS);
 
 		s.setCurrentPhase(SeasonPhase.SEASONPREP);
-		assertEquals(10, s.getDivisions().get(0).getSubDivisions().get(0).getTeams().size());
+		assertEquals(5, s.getDivisions().get(0).getSubDivisions().get(0).getTeams().size());
+		assertEquals(5, s.getDivisions().get(1).getSubDivisions().get(0).getTeams().size());
 	}
 
 	@Test
@@ -134,7 +137,7 @@ public class SeasonTest {
 		s.sortTeams(teams);
 		s.setTeams(teams);
 		s.setCurrentPhase(SeasonPhase.QUALIFIERSPREP);
-		s.createDivisions(teams.size(), 2, 3);
+		s.createDivisions(teams.size(), 2, 4);
 		s.distributeTeams();
 		assertEquals(3, s.getDivisions().size());
 		assertEquals(1, s.getDivisions().get(0).getSubDivisions().size());

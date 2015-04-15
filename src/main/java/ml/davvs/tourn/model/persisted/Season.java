@@ -1,8 +1,13 @@
-package ml.davvs.tourn.model;
+package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import ml.davvs.tourn.model.SeasonPhase;
+import ml.davvs.tourn.model.SeasonPhaseGuard;
+import ml.davvs.tourn.model.SeasonPhaseGuardException;
+import ml.davvs.tourn.model.SeasonPhaseRequiredException;
 
 public class Season {
 
@@ -15,7 +20,15 @@ public class Season {
 	private ArrayList<Game> placementMatches;
 	private Tournament tournament;
 	private SeasonPhaseGuard phaseGuard;
+	private int gameRounds;
+	private boolean distribtionDone;
 	
+	public int getGameRounds() {
+		return gameRounds;
+	}
+	public void setGameRounds(int gameRounds) {
+		this.gameRounds = gameRounds;
+	}
 	public SeasonPhase getCurrentPhase() {
 		return currentPhase;
 	}
@@ -70,6 +83,22 @@ public class Season {
 	public Season() {
 		currentPhase = SeasonPhase.PREPARATION;
 		phaseGuard = new SeasonPhaseGuard(this);
+		gameRounds = 0;
+		distribtionDone = false;
+	}
+
+	public void addTeam(String name, String email, float guessedSkill, Subdivision subdivision) throws SeasonPhaseRequiredException {
+		if (!(currentPhase == SeasonPhase.SEASON || currentPhase == SeasonPhase.SEASONPREP)){
+			throw new SeasonPhaseRequiredException(currentPhase, SeasonPhase.SEASONPREP);
+		}
+		//Add a team to a subdivision late
+		Team t = new Team(name, email, guessedSkill); //TODO make a lookup if this team already exists
+		t.getCurrentSeason().setSeason(this);
+		t.getCurrentSeason().setSubDivision(subdivision);
+		subdivision.getTeams().add(t.getCurrentSeason());
+		teams.add(t.getCurrentSeason());
+		playerCount ++;
+		distribtionDone = false; //TODO Assert that this is true when passing on to the next phase
 	}
 	
 	public void sortTeams (ArrayList<TeamSeasonStats> teams) throws SeasonPhaseRequiredException {
@@ -90,7 +119,9 @@ public class Season {
 	}
 
 	public void generateGames() throws SeasonPhaseRequiredException{
-		SeasonPhase.assertPhase(currentPhase, SeasonPhase.SEASONPREP);
+		if (currentPhase != SeasonPhase.SEASONPREP && currentPhase != SeasonPhase.SEASON) {
+			throw new SeasonPhaseRequiredException("invalid current phase. Should be " + SeasonPhase.SEASON + " or " + SeasonPhase.SEASONPREP);
+		}
 
 		for (Division division : divisions) {
 			for (Subdivision subdivision : division.getSubDivisions()){
@@ -107,7 +138,8 @@ public class Season {
 		int nextTeamId = 0;
 		for (int d = 0; d < divisions.size(); d++){
 			Division division = divisions.get(d);
-			int playersInDivision = division.getSubDivisions().size() * teams.size() / subdivisionCount;
+			float playersPerSubdivision = (teams.size() / subdivisionCount);
+			int playersInDivision = (int)((float)division.getSubDivisions().size() * playersPerSubdivision);
 			if (restPlayersToDistribute > division.getSubDivisions().size()) {
 				playersInDivision += division.getSubDivisions().size();
 				restPlayersToDistribute -= division.getSubDivisions().size();
@@ -126,11 +158,11 @@ public class Season {
 				assert(teamSeasonStats.getSubDivision() == null);
 				teamSeasonStats.setCup(null);
 				teamSeasonStats.setSubDivision(subdivision);
-				teamSeasonStats.setElo(team.getLastElo());
+				//teamSeasonStats.setElo(team.getLastElo());
 				teamSeasonStats.setSeason(this);
 				teamSeasonStats.setSubDivision(subdivision);
 				teamSeasonStats.setTeam(team);
-				team.getSeasonStats().add(teamSeasonStats);
+				team.getSeasonStats().add(teamSeasonStats); //TODO Fix this
 				subdivision.getTeams().add(teamSeasonStats);
 				nextTeamId ++;
 				playersInDivision --;
@@ -138,12 +170,25 @@ public class Season {
 			}
 		}
 		assert(nextTeamId == teams.size() && restPlayersToDistribute == 0);
+		distribtionDone = true;
 	}
 
-	public void createDivisions(int teams, int subdivisionSiblingsMax, int minPlayersPerDivision) throws SeasonPhaseRequiredException {
+	/**
+	 * 
+	 * @param teams
+	 * @param subdivisionSiblingsMax
+	 * @param targetPlayersPerDivision. if there's multiple subdivisions, the divisions will contain
+	 * 		targetPlayersPerDivision or targetPlayersPerDivision-1 amount of players. If there are very few divisions, it may contain more 
+	 * @throws SeasonPhaseRequiredException
+	 */
+	public void createDivisions(int teams, int subdivisionSiblingsMax, int targetPlayersPerDivision) throws SeasonPhaseRequiredException {
 		SeasonPhase.assertPhase(currentPhase, SeasonPhase.QUALIFIERSPREP);
 
-		subdivisionCount = (int) Math.floor((float)teams / minPlayersPerDivision);
+		subdivisionCount = (int) Math.ceil((float)teams / targetPlayersPerDivision);
+	
+		if (subdivisionCount <= 0) {
+			subdivisionCount = 1;
+		}
 
 		int midSubdivisions = subdivisionCount == 1 ? 0 : subdivisionCount - 2;
 		int midDivisions;
@@ -164,7 +209,7 @@ public class Season {
         divisions = new ArrayList<Division>();
         QualifierGroup upperQualifierGroup = null;
 		for (int d = 0; d < divisionCount; d++){
-			Division division = new Division();
+			Division division = new Division(this);
 			QualifierGroup qualifierGroup = new QualifierGroup();
 			if (d + 1 < divisionCount) {
 				qualifierGroup.setUpperDivision(division);
