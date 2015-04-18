@@ -29,10 +29,8 @@ public class SeasonTest {
 
 	@Before
 	public void setUp() throws Exception {
-		s = new Season();
-		tournament = new Tournament();
+		s = new Season(tournament);
 		tournament.setName("Test Tournament");
-		s.setTournament(tournament);
 		teams = new ArrayList<TeamSeasonStats>();
 	}
 

@@ -24,7 +24,7 @@ public class ConsoleOut {
 	}
 
 	public void printAllGamesRounds(final Season season) {
-
+		System.out.println("*** All Games ***");
 		for (int gr = 0; gr < season.getGameRounds(); gr++) {
 			System.out.println(" ### Round " + (gr + 1) + " ###");
 			for (int d = 0; d < season.getDivisions().size(); d++) {
@@ -62,6 +62,7 @@ public class ConsoleOut {
 	}
 
 	public void printSeasonDivisions(final Season season){
+		System.out.println("*** Divisions ***");
 		ArrayList<Division> divs = season.getDivisions();
 		for (int d = 0; d < divs.size(); d++){
 			Division division = divs.get(d);

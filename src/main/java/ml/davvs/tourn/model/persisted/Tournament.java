@@ -1,11 +1,22 @@
 package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Tournament {
+	private UUID id;
 	private String name;
 	private ArrayList<Season> seasons;
 
+	public Tournament() {
+		setId(UUID.randomUUID());
+	}
+	public UUID getId() {
+		return id;
+	}
+	private void setId(UUID id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}

@@ -1,11 +1,17 @@
 package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class League {
 	private String name;
 	private ArrayList<Season> seasons;
 	private ArrayList<Cup> cups;
+	private UUID id;
+
+	public League(){
+		setId(UUID.randomUUID());
+	}
 	public String getName() {
 		return name;
 	}
@@ -23,6 +29,12 @@ public class League {
 	}
 	public void setCups(ArrayList<Cup> cups) {
 		this.cups = cups;
+	}
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
 	}
 	
 	

@@ -3,6 +3,7 @@ package ml.davvs.tourn.model.persisted;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.UUID;
 
 import ml.davvs.tourn.model.SeasonPhase;
 import ml.davvs.tourn.model.SeasonPhaseGuard;
@@ -22,6 +23,7 @@ public class Season {
 	private SeasonPhaseGuard phaseGuard;
 	private int gameRounds;
 	private boolean distribtionDone;
+	private UUID id;
 	
 	public int getGameRounds() {
 		return gameRounds;
@@ -38,9 +40,6 @@ public class Season {
 	}
 	public Tournament getTournament() {
 		return tournament;
-	}
-	public void setTournament(Tournament tournament) {
-		this.tournament = tournament;
 	}
 	public int getSubdivisionCount() {
 		return subdivisionCount;
@@ -80,11 +79,14 @@ public class Season {
 		this.placementMatches = placementMatches;
 	}
 	
-	public Season() {
+	public Season(Tournament t) {
+		id = UUID.randomUUID();
 		currentPhase = SeasonPhase.PREPARATION;
 		phaseGuard = new SeasonPhaseGuard(this);
+		teams = new ArrayList<TeamSeasonStats>();
 		gameRounds = 0;
 		distribtionDone = false;
+		tournament = t;
 	}
 
 	public void addTeam(String name, String email, float guessedSkill, Subdivision subdivision) throws SeasonPhaseRequiredException {
@@ -180,9 +182,13 @@ public class Season {
 	 * @param targetPlayersPerDivision. if there's multiple subdivisions, the divisions will contain
 	 * 		targetPlayersPerDivision or targetPlayersPerDivision-1 amount of players. If there are very few divisions, it may contain more 
 	 * @throws SeasonPhaseRequiredException
+	 * @throws SeasonPhaseGuardException 
 	 */
-	public void createDivisions(int teams, int subdivisionSiblingsMax, int targetPlayersPerDivision) throws SeasonPhaseRequiredException {
+	public void createDivisions(int teams, int subdivisionSiblingsMax, int targetPlayersPerDivision) throws SeasonPhaseRequiredException, SeasonPhaseGuardException {
 		SeasonPhase.assertPhase(currentPhase, SeasonPhase.QUALIFIERSPREP);
+		if (divisions != null){
+			throw new SeasonPhaseGuardException("Divisions are already set");
+		}
 
 		subdivisionCount = (int) Math.ceil((float)teams / targetPlayersPerDivision);
 	
@@ -239,11 +245,10 @@ public class Season {
 				}
 			}
 			for (int s = 0; s < currentSubdivisions; s++){
-				Subdivision subdivision = new Subdivision();
+				Subdivision subdivision = new Subdivision(division);
 				subdivision.setSiblings(currentSubdivisions);
 				subdivision.setTeams(new ArrayList<TeamSeasonStats>());
 				subdivision.setGameRounds(new ArrayList<GameRound>());
-				subdivision.setDivision(division);
 				subdivision.setSiblingNumber(s);
 
 				if (s > 25){
@@ -257,5 +262,21 @@ public class Season {
 			upperQualifierGroup = qualifierGroup;
 		}
     }
+	public void addTeam(TeamSeasonStats teamSeasonStats, int targetDiv, int targetSubdiv) throws ConfFileException {
+		for (int d = 0; d < divisions.size(); d++ ){
+			Division division = divisions.get(d);
+			if (division.getLevel() != targetDiv) {
+				continue;
+			}
+			if (targetSubdiv > division.getSubDivisions().size()){
+				throw new ConfFileException("Invalid subdivision " + targetSubdiv + " Amount of subdivisions are:" + division.getSubDivisions().size());
+			}
+			Subdivision subdivision =  division.getSubDivisions().get(targetSubdiv - 1);
+			teams.add(teamSeasonStats);
+			subdivision.getTeams().add(teamSeasonStats);
+			return;
+		}
+		throw new ConfFileException("Unable to find division with level " + targetDiv);
+	}
 		
 }

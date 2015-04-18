@@ -21,7 +21,7 @@ public class Game {
 	private Integer round;
 
 	public Game() {
-		int id = 0; // TODO new UUID(mostSigBits, leastSigBits) //TODO Use UUID Generator?
+		setId(UUID.randomUUID());
 	}
 	public TeamSeasonStats getHomeTeam() {
 		return homeTeam;
@@ -97,6 +97,12 @@ public class Game {
 
 	public boolean isPlayed() {
 		return homeScore != null && awayScore != null;
+	}
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
 	}
 	
 	

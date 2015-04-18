@@ -1,10 +1,12 @@
 package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import ml.davvs.tourn.model.QualifierGroupException;
 
 public class Division {
+	private UUID id;
 	private ArrayList<Subdivision> subDivisions;
 	private int level;
 	private int playerCount;
@@ -14,6 +16,7 @@ public class Division {
 	private Season season;
 	
 	public Division(Season s) {
+		setId(UUID.randomUUID());
 		season = s;
 	}
 	public Season getSeason() {
@@ -63,5 +66,11 @@ public class Division {
 	}
 	public void setLevel(int level) {
 		this.level = level;
+	}
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
 	}
 }

@@ -1,12 +1,14 @@
 package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import ml.davvs.tourn.model.QualifierGroupException;
 
 //Between each division there will be a qualifier group.
 //The best of the group will be qualified to the upper division. 
 public class QualifierGroup {
+	private UUID id;
 	private String name;
 	private ArrayList<TeamSeasonStats> teams;
 	private Division upperDivision;
@@ -57,6 +59,7 @@ public class QualifierGroup {
 	
 	public QualifierGroup() {
 		teams = new ArrayList<TeamSeasonStats>();
+		setId(UUID.randomUUID());
 	}
 	
 	public int getCountTeamsUpper(){
@@ -79,5 +82,11 @@ public class QualifierGroup {
 			}
 		}
 		return count;
+	}
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
 	}
 }

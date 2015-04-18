@@ -34,7 +34,7 @@ public class SeasonPhaseGuard {
 				try {
 					qualifierGroup = division.getLowerQualifierGroup();
 				} catch (QualifierGroupException e) {
-					throw new SeasonPhaseGuardException("Failed to get lower qualfier group", e);
+					throw new SeasonPhaseGuardException("Failed to get lower qualfier group for divivion " + division.getName(), e);
 				}
 				
 				ArrayList<TeamSeasonStats> teams = qualifierGroup.getTeams();

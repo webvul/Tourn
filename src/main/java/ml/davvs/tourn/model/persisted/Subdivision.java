@@ -1,10 +1,12 @@
 package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import ml.davvs.tourn.model.GameRegistrationException;
 
 public class Subdivision {
+	private UUID id;
 	private String name;
 	private ArrayList<TeamSeasonStats> teams;
 	private ArrayList<GameRound> gameRounds;
@@ -12,6 +14,12 @@ public class Subdivision {
 	private int siblings;
 	private Division division;
 	
+	public Subdivision(Division division) {
+		setId(UUID.randomUUID());
+		this.division = division;
+		teams = new ArrayList<TeamSeasonStats>();
+		gameRounds = new ArrayList<GameRound>();
+	}
 	public ArrayList<GameRound> getGameRounds() {
 		return gameRounds;
 	}
@@ -123,5 +131,11 @@ public class Subdivision {
 		if (s.getGameRounds() < gameRounds.size()){
 			s.setGameRounds(gameRounds.size());
 		}
+	}
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
 	}
 }

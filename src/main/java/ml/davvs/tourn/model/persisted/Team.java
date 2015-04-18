@@ -1,13 +1,16 @@
 package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Team {
 	private TeamStaticInfo staticInfo;
 	private ArrayList<TeamSeasonStats> seasonStats;
-	
+	private UUID id;
+
 	public Team(String name, String email, float guessedSkill){
 		//TODO Check and see if this team already exists
+		setId(UUID.randomUUID());
 		this.staticInfo = new TeamStaticInfo(name, email);
 		TeamSeasonStats currentSeason = new TeamSeasonStats();
 		currentSeason.setTeam(this);
@@ -36,6 +39,14 @@ public class Team {
 	}
 	public void setSeasonStats(ArrayList<TeamSeasonStats> seasonStats) {
 		this.seasonStats = seasonStats;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}
 	
 }

@@ -1,12 +1,14 @@
 package ml.davvs.tourn.model.persisted;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import ml.davvs.tourn.model.QualifierGroupException;
 
 // Every time a team is participating in a season, The player will have these stats in the season.
 // Possible created from the last season stats or from placement matches
 public class TeamSeasonStats {
+	private UUID id;
 	private Team team;
 	private Subdivision subdivision;
 	private Cup cup;
@@ -15,6 +17,10 @@ public class TeamSeasonStats {
 	private ArrayList<Game> placementMatches;
 	private Season season;
 	private int elo;
+	
+	public TeamSeasonStats() {
+		setId(UUID.randomUUID());
+	}
 
 	public float getGuessedSkill() {
 		return guessedSkill;
@@ -69,5 +75,13 @@ public class TeamSeasonStats {
 	}
 	public void setElo(int elo) {
 		this.elo = elo;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}
 }
