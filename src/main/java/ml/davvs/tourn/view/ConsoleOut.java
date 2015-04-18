@@ -29,8 +29,8 @@ public class ConsoleOut {
 			System.out.println(" ### Round " + (gr + 1) + " ###");
 			for (int d = 0; d < season.getDivisions().size(); d++) {
 				Division division = season.getDivisions().get(d);
-				for (int s = 0; s < division.getSubDivisions().size(); s ++) {
-					Subdivision subdivision = division.getSubDivisions().get(s);
+				for (int s = 0; s < division.getSubdivisions().size(); s ++) {
+					Subdivision subdivision = division.getSubdivisions().get(s);
 					if (gr < subdivision.getGameRounds().size()){
 						GameRound gameRound = subdivision.getGameRounds().get(gr);
 						for (Game game : gameRound.getGames()) {
@@ -67,8 +67,8 @@ public class ConsoleOut {
 		for (int d = 0; d < divs.size(); d++){
 			Division division = divs.get(d);
 			System.out.println("*** " + division.getName() + " ***");
-			for (int s = 0; s < division.getSubDivisions().size(); s++){
-				Subdivision subdivision = division.getSubDivisions().get(s);
+			for (int s = 0; s < division.getSubdivisions().size(); s++){
+				Subdivision subdivision = division.getSubdivisions().get(s);
 				System.out.println("  " + subdivision.getName());
 				for (int t = 0; t < subdivision.getTeams().size(); t++){
 					TeamSeasonStats ts = subdivision.getTeams().get(t);

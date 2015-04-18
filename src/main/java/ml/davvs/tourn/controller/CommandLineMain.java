@@ -117,7 +117,7 @@ public class CommandLineMain {
 				subdivisionNames[i] = parts[i+1];
 			}
 			totalSubDivisions += subdivisionNames.length;
-			division.setSubDivisions(subdivisions);
+			division.setSubdivisions(subdivisions);
 	    }
 	    for (int d = 0; d < divisions.size() - 1; d++){
 	    	Division upperDivision = divisions.get(d);
@@ -147,7 +147,7 @@ public class CommandLineMain {
 			String parts[] = text.split(";");
 			
 			String name, email;
-			int targetDiv, targetSubdiv;
+			int targetDiv, targetSubdiv = 0;
 			float guessedSkill;
 			String target;
 			name = parts[0];
@@ -155,7 +155,9 @@ public class CommandLineMain {
 			target = parts[2];
 			String[] targetParts = target.split("\\.");
 			targetDiv = Integer.parseInt(targetParts[0]);
-			targetSubdiv = Integer.parseInt(targetParts[1]);
+			if (targetParts.length > 1){
+				targetSubdiv = Integer.parseInt(targetParts[1]);
+			}
 			Team team = tournament.lookupTeam(name, email, 0.0f);
 			TeamSeasonStats ts = team.getCurrentSeason();
 			teams.add(ts);

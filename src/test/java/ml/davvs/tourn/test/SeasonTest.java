@@ -57,8 +57,8 @@ public class SeasonTest {
 		s.createDivisions(teams.size(), 2, 6);
 		
 		assertEquals(2, s.getDivisions().size());
-		assertEquals(1, s.getDivisions().get(0).getSubDivisions().size());
-		assertEquals(1, s.getDivisions().get(1).getSubDivisions().size());
+		assertEquals(1, s.getDivisions().get(0).getSubdivisions().size());
+		assertEquals(1, s.getDivisions().get(1).getSubdivisions().size());
 	}
 
 	@Test
@@ -72,10 +72,10 @@ public class SeasonTest {
 
 		assertEquals(4, s.getDivisions().size());
 		assertEquals(5, s.getSubdivisionCount());
-		assertEquals(1, s.getDivisions().get(0).getSubDivisions().size());
-		assertEquals(2, s.getDivisions().get(1).getSubDivisions().size());
-		assertEquals(1, s.getDivisions().get(2).getSubDivisions().size());
-		assertEquals(1, s.getDivisions().get(3).getSubDivisions().size());
+		assertEquals(1, s.getDivisions().get(0).getSubdivisions().size());
+		assertEquals(2, s.getDivisions().get(1).getSubdivisions().size());
+		assertEquals(1, s.getDivisions().get(2).getSubdivisions().size());
+		assertEquals(1, s.getDivisions().get(3).getSubdivisions().size());
 	}
 	
 	@Test
@@ -88,9 +88,9 @@ public class SeasonTest {
 		s.createDivisions(teams.size(), 2, 6);
 
 		assertEquals(3, s.getDivisions().size());
-		assertEquals(1, s.getDivisions().get(0).getSubDivisions().size());
-		assertEquals(2, s.getDivisions().get(1).getSubDivisions().size());
-		assertEquals(1, s.getDivisions().get(2).getSubDivisions().size());
+		assertEquals(1, s.getDivisions().get(0).getSubdivisions().size());
+		assertEquals(2, s.getDivisions().get(1).getSubdivisions().size());
+		assertEquals(1, s.getDivisions().get(2).getSubdivisions().size());
 	}
 
 	@Test
@@ -103,9 +103,9 @@ public class SeasonTest {
 		s.createDivisions(teams.size(), 2, 9);
 
 		assertEquals(3, s.getDivisions().size());
-		assertEquals(1, s.getDivisions().get(0).getSubDivisions().size());
-		assertEquals(1, s.getDivisions().get(1).getSubDivisions().size());
-		assertEquals(1, s.getDivisions().get(2).getSubDivisions().size());
+		assertEquals(1, s.getDivisions().get(0).getSubdivisions().size());
+		assertEquals(1, s.getDivisions().get(1).getSubdivisions().size());
+		assertEquals(1, s.getDivisions().get(2).getSubdivisions().size());
 	}
 
 	@Test
@@ -118,14 +118,14 @@ public class SeasonTest {
 		s.createDivisions(teams.size(), 2, 6);
 		s.distributeTeams();
 		assertEquals(2, s.getDivisions().size());
-		assertEquals(1, s.getDivisions().get(0).getSubDivisions().size());
-		assertEquals(1, s.getDivisions().get(1).getSubDivisions().size());
+		assertEquals(1, s.getDivisions().get(0).getSubdivisions().size());
+		assertEquals(1, s.getDivisions().get(1).getSubdivisions().size());
 
 		s.setCurrentPhase(SeasonPhase.QUALIFIERS);
 
 		s.setCurrentPhase(SeasonPhase.SEASONPREP);
-		assertEquals(5, s.getDivisions().get(0).getSubDivisions().get(0).getTeams().size());
-		assertEquals(5, s.getDivisions().get(1).getSubDivisions().get(0).getTeams().size());
+		assertEquals(5, s.getDivisions().get(0).getSubdivisions().get(0).getTeams().size());
+		assertEquals(5, s.getDivisions().get(1).getSubdivisions().get(0).getTeams().size());
 	}
 
 	@Test
@@ -138,15 +138,15 @@ public class SeasonTest {
 		s.createDivisions(teams.size(), 2, 4);
 		s.distributeTeams();
 		assertEquals(3, s.getDivisions().size());
-		assertEquals(1, s.getDivisions().get(0).getSubDivisions().size());
-		assertEquals(1, s.getDivisions().get(1).getSubDivisions().size());
-		assertEquals(1, s.getDivisions().get(2).getSubDivisions().size());
+		assertEquals(1, s.getDivisions().get(0).getSubdivisions().size());
+		assertEquals(1, s.getDivisions().get(1).getSubdivisions().size());
+		assertEquals(1, s.getDivisions().get(2).getSubdivisions().size());
 
 		s.setCurrentPhase(SeasonPhase.QUALIFIERS);
 		s.setCurrentPhase(SeasonPhase.SEASONPREP);
-		assertEquals(4, s.getDivisions().get(0).getSubDivisions().get(0).getTeams().size());
-		assertEquals(3, s.getDivisions().get(1).getSubDivisions().get(0).getTeams().size());
-		assertEquals(3, s.getDivisions().get(2).getSubDivisions().get(0).getTeams().size());
+		assertEquals(4, s.getDivisions().get(0).getSubdivisions().get(0).getTeams().size());
+		assertEquals(3, s.getDivisions().get(1).getSubdivisions().get(0).getTeams().size());
+		assertEquals(3, s.getDivisions().get(2).getSubdivisions().get(0).getTeams().size());
 
 	}
 
@@ -155,10 +155,10 @@ public class SeasonTest {
 		testCreateDivisions24Players();
 		s.distributeTeams();
 		
-		assertEquals(6, s.getDivisions().get(0).getSubDivisions().get(0).getTeams().size());
-		assertEquals(6, s.getDivisions().get(1).getSubDivisions().get(0).getTeams().size());
-		assertEquals(6, s.getDivisions().get(1).getSubDivisions().get(1).getTeams().size());
-		assertEquals(6, s.getDivisions().get(2).getSubDivisions().get(0).getTeams().size());
+		assertEquals(6, s.getDivisions().get(0).getSubdivisions().get(0).getTeams().size());
+		assertEquals(6, s.getDivisions().get(1).getSubdivisions().get(0).getTeams().size());
+		assertEquals(6, s.getDivisions().get(1).getSubdivisions().get(1).getTeams().size());
+		assertEquals(6, s.getDivisions().get(2).getSubdivisions().get(0).getTeams().size());
 	}
 
 	private void assertAllExpectedGamesAreScheduled() throws SeasonPhaseRequiredException {

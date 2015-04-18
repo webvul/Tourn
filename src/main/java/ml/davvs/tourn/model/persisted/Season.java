@@ -126,7 +126,7 @@ public class Season {
 		}
 
 		for (Division division : divisions) {
-			for (Subdivision subdivision : division.getSubDivisions()){
+			for (Subdivision subdivision : division.getSubdivisions()){
 				subdivision.generateGames();
 			}
 		}
@@ -141,10 +141,10 @@ public class Season {
 		for (int d = 0; d < divisions.size(); d++){
 			Division division = divisions.get(d);
 			float playersPerSubdivision = (teams.size() / subdivisionCount);
-			int playersInDivision = (int)((float)division.getSubDivisions().size() * playersPerSubdivision);
-			if (restPlayersToDistribute > division.getSubDivisions().size()) {
-				playersInDivision += division.getSubDivisions().size();
-				restPlayersToDistribute -= division.getSubDivisions().size();
+			int playersInDivision = (int)((float)division.getSubdivisions().size() * playersPerSubdivision);
+			if (restPlayersToDistribute > division.getSubdivisions().size()) {
+				playersInDivision += division.getSubdivisions().size();
+				restPlayersToDistribute -= division.getSubdivisions().size();
 			} else if (restPlayersToDistribute > 0) {
 				playersInDivision += restPlayersToDistribute;
 				restPlayersToDistribute -= restPlayersToDistribute;
@@ -153,8 +153,8 @@ public class Season {
 			int s = 0;
 			
 			while (playersInDivision > 0){
-				int subdivisionId = s % division.getSubDivisions().size();
-				Subdivision subdivision = division.getSubDivisions().get(subdivisionId);
+				int subdivisionId = s % division.getSubdivisions().size();
+				Subdivision subdivision = division.getSubdivisions().get(subdivisionId);
 				TeamSeasonStats teamSeasonStats = teams.get(nextTeamId);
 				Team team = teamSeasonStats.getTeam();
 				assert(teamSeasonStats.getSubDivision() == null);
@@ -233,7 +233,7 @@ public class Season {
 				division.setName("Division " + d);
 			}
 			qualifierGroup.setName("Promotion to " + division.getName() + " Qualifier group");
-			division.setSubDivisions(new ArrayList<Subdivision>());
+			division.setSubdivisions(new ArrayList<Subdivision>());
 			int currentSubdivisions = 0;
 			if (d == 0 || d == divisionCount - 1) {
 				currentSubdivisions = 1;
@@ -255,7 +255,7 @@ public class Season {
 					throw new RuntimeException("Unable to make up subdivision sibling letter");
 				}
 				subdivision.setName(division.getName() + (currentSubdivisions > 1 ? (char)(65 + s) : ""));
-				division.getSubDivisions().add(subdivision);
+				division.getSubdivisions().add(subdivision);
 			}
 
 			divisions.add(division);
@@ -268,10 +268,15 @@ public class Season {
 			if (division.getLevel() != targetDiv) {
 				continue;
 			}
-			if (targetSubdiv > division.getSubDivisions().size()){
-				throw new ConfFileException("Invalid subdivision " + targetSubdiv + " Amount of subdivisions are:" + division.getSubDivisions().size());
+			if (targetSubdiv > division.getSubdivisions().size()){
+				throw new ConfFileException("Invalid subdivision " + targetSubdiv + " Amount of subdivisions are:" + division.getSubdivisions().size());
 			}
-			Subdivision subdivision =  division.getSubDivisions().get(targetSubdiv - 1);
+			Subdivision subdivision;
+			if (targetSubdiv == 0){
+				subdivision = division.getSubdivisionWithTheLeastPlayers();
+			} else {
+				subdivision =  division.getSubdivisions().get(targetSubdiv - 1);
+			}
 			teams.add(teamSeasonStats);
 			subdivision.getTeams().add(teamSeasonStats);
 			return;

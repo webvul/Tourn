@@ -7,7 +7,7 @@ import ml.davvs.tourn.model.QualifierGroupException;
 
 public class Division {
 	private UUID id;
-	private ArrayList<Subdivision> subDivisions;
+	private ArrayList<Subdivision> subdivisions;
 	private int level;
 	private int playerCount;
 	private String name;
@@ -55,11 +55,11 @@ public class Division {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public ArrayList<Subdivision> getSubDivisions() {
-		return subDivisions;
+	public ArrayList<Subdivision> getSubdivisions() {
+		return subdivisions;
 	}
-	public void setSubDivisions(ArrayList<Subdivision> subDivisions) {
-		this.subDivisions = subDivisions;
+	public void setSubdivisions(ArrayList<Subdivision> subDivisions) {
+		this.subdivisions = subDivisions;
 	}
 	public int getLevel() {
 		return level;
@@ -72,5 +72,20 @@ public class Division {
 	}
 	public void setId(UUID id) {
 		this.id = id;
+	}
+	public Subdivision getSubdivisionWithTheLeastPlayers() {
+		int bestId = (int) Math.floor(Math.random() * subdivisions.size());
+		Subdivision best = subdivisions.get(bestId);
+		for (int s = 0; s < subdivisions.size(); s++){
+			if (bestId == s){
+				continue;
+			}
+			Subdivision compare = subdivisions.get(s);
+			if (best.getTeams().size() > compare.getTeams().size()) {
+				bestId = s;
+				best = compare;
+			}
+		}
+		return best;
 	}
 }
