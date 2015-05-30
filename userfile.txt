@@ -1,47 +1,49 @@
-Team1;team1@davvs.ml;6
-Team2;team2@davvs.ml;6
-Team3;team3@davvs.ml;6
-Team4;team4@davvs.ml;6
-Team5;team5@davvs.ml;6
-Team6;team6@davvs.ml;6
-Team7;team7@davvs.ml;5
-Team8;team8@davvs.ml;5
-Team9;team9@davvs.ml;5
-Team10;team10@davvs.ml;5
-Team11;team11@davvs.ml;5
-Team12;team12@davvs.ml;5
-Team13;team13@davvs.ml;5
-Team14;team14@davvs.ml;5
-Team15;team15@davvs.ml;5
-Team16;team16@davvs.ml;5
-Team17;team17@davvs.ml;5
-Team18;team18@davvs.ml;5
-Team19;team19@davvs.ml;4.1
-Team20;team20@davvs.ml;4.2
-Team21;team21@davvs.ml;4.1
-Team22;team22@davvs.ml;4.2
-Team23;team23@davvs.ml;4.1
-Team24;team24@davvs.ml;4.2
-Team25;team25@davvs.ml;4.1
-Team26;team26@davvs.ml;4.2
-Team27;team27@davvs.ml;4.1
-Team28;team28@davvs.ml;4.2
-Team29;team29@davvs.ml;4.1
-Team30;team30@davvs.ml;4.2
-Team31;team31@davvs.ml;3.1
-Team32;team32@davvs.ml;3.2
-Team33;team33@davvs.ml;3.1
-Team34;team34@davvs.ml;3.2
-Team35;team35@davvs.ml;3.1
-Team36;team36@davvs.ml;3.2
-Team37;team37@davvs.ml;3.1
-Team38;team38@davvs.ml;3.2
-Team39;team39@davvs.ml;3.1
-Team40;team40@davvs.ml;3.2
-Team41;team41@davvs.ml;3.1
-Team42;team42@davvs.ml;3.2
-Team43;team43@davvs.ml;2.1
-Team44;team44@davvs.ml;2.1
-Team45;team45@davvs.ml;2.1
-Team46;team46@davvs.ml;2.1
-Team47;team47@davvs.ml;2.1
+Ralf H;ralf.himmerlid@king.com;5
+Stefan B;stefan.berggren@king.com;5
+Anders J;anders.johansson@king.com;5
+Mikael B;mikael.brandt@king.com;5
+Pierre E;pierre.engberg@king.com;5
+Jan Z;jan.zetterman@king.com;5
+Markus S;markus.svennerstal@king.com;5
+Magnus S;magnus.strandh@king.com;4.1
+Alexander P;alexander.poulikakos@king.com;4.1
+John A;john.almbecker@king.com;4.1
+Joonas E;joonas.erkinheimo@king.com;4.1
+David V;david.viklund@king.com;4.1
+Svante E;svante.esbjornsson@king.com;4.1
+Vlad G;vlad.gheorghe@king.com;4.2
+Adam A;adam.axelsson@king.com;4.2
+Marcel M;marcel.markov@king.com;4.2
+Somy C;somy@king.com;4.2
+Andreas A;andreas.asplund@king.com;4.2
+Markus R;markus.ridal@king.com;4.2
+David N;david.nordblom@king.com;3.1
+Miroslaw C;miroslaw.cholewinski@king.com;3.1
+Per M;per.malmen@king.com;3.1
+Piotr P;piotr.paczkowski@king.com;3.1
+Seyit A;seyit.abbasoglu@king.com;3.1
+Tim Y;tim.yagan@king.com;3.1
+Håkan V;hakan.ventura@king.com;3.1
+Fredrik E;fredrik.elmegren@king.com;3.2
+Gareth Y;gareth.young@king.com;3.2
+Per H;per.hjelm@king.com;3.2
+Fredrik H;fredrik.hjelm@king.com;3.2
+Alexander V;alexander.vonroth@king.com;3.2
+Samuel B;samuel.beijer@king.com;3.2
+Martin P;martin.petersson@king.com;2.1
+Per E;per.ersson@king.com;2.1
+Mårten K;marten.kallman@king.com;2.1
+Elena B;elena.brandl@king.com;2.1
+Cosmin F;cosmin.fota@king.com;2.1
+Jonas R;jonas.rydin@king.com;2.1
+Christoffer E;christoffer.eriksson@king.com;2.1
+Tina N;tina@king.com;2.2
+Yennshin L;yennshin.loi@king.com;2.2
+Johannes C;johannes.christenson@king.com;2.2
+Daniel M;daniel.mattsson@king.com;2.2
+Vivek G;vivek.grimm@king.com;2.2
+Jakob N;jakob.nettelbladt@king.com;2.2
+Rabi A;rabi.afram@king.com;1
+Sven A;sven.andersson@king.com;1
+Susanna B;susanna.berg@king.com;1
+Emma H;emma.hedo@king.com;1

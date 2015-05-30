@@ -124,8 +124,8 @@ public class SeasonTest {
 		s.setCurrentPhase(SeasonPhase.QUALIFIERS);
 
 		s.setCurrentPhase(SeasonPhase.SEASONPREP);
-		assertEquals(5, s.getDivisions().get(0).getSubdivisions().get(0).getTeams().size());
-		assertEquals(5, s.getDivisions().get(1).getSubdivisions().get(0).getTeams().size());
+		assertEquals(5, s.getDivisions().get(0).getSubdivisions().get(0).getTeamSeasonStats().size());
+		assertEquals(5, s.getDivisions().get(1).getSubdivisions().get(0).getTeamSeasonStats().size());
 	}
 
 	@Test
@@ -144,9 +144,9 @@ public class SeasonTest {
 
 		s.setCurrentPhase(SeasonPhase.QUALIFIERS);
 		s.setCurrentPhase(SeasonPhase.SEASONPREP);
-		assertEquals(4, s.getDivisions().get(0).getSubdivisions().get(0).getTeams().size());
-		assertEquals(3, s.getDivisions().get(1).getSubdivisions().get(0).getTeams().size());
-		assertEquals(3, s.getDivisions().get(2).getSubdivisions().get(0).getTeams().size());
+		assertEquals(4, s.getDivisions().get(0).getSubdivisions().get(0).getTeamSeasonStats().size());
+		assertEquals(3, s.getDivisions().get(1).getSubdivisions().get(0).getTeamSeasonStats().size());
+		assertEquals(3, s.getDivisions().get(2).getSubdivisions().get(0).getTeamSeasonStats().size());
 
 	}
 
@@ -155,16 +155,16 @@ public class SeasonTest {
 		testCreateDivisions24Players();
 		s.distributeTeams();
 		
-		assertEquals(6, s.getDivisions().get(0).getSubdivisions().get(0).getTeams().size());
-		assertEquals(6, s.getDivisions().get(1).getSubdivisions().get(0).getTeams().size());
-		assertEquals(6, s.getDivisions().get(1).getSubdivisions().get(1).getTeams().size());
-		assertEquals(6, s.getDivisions().get(2).getSubdivisions().get(0).getTeams().size());
+		assertEquals(6, s.getDivisions().get(0).getSubdivisions().get(0).getTeamSeasonStats().size());
+		assertEquals(6, s.getDivisions().get(1).getSubdivisions().get(0).getTeamSeasonStats().size());
+		assertEquals(6, s.getDivisions().get(1).getSubdivisions().get(1).getTeamSeasonStats().size());
+		assertEquals(6, s.getDivisions().get(2).getSubdivisions().get(0).getTeamSeasonStats().size());
 	}
 
 	private void assertAllExpectedGamesAreScheduled() throws SeasonPhaseRequiredException {
 		for (TeamSeasonStats t : s.getTeams()) {
 			Subdivision sd = t.getSubDivision();
-			ArrayList<TeamSeasonStats> subdivisionMembersRemaining = (ArrayList<TeamSeasonStats>) sd.getTeams().clone();
+			ArrayList<TeamSeasonStats> subdivisionMembersRemaining = (ArrayList<TeamSeasonStats>) sd.getTeamSeasonStats().clone();
 			for (GameRound gr : sd.getGameRounds()) {
 				for (Game game : gr.getGames()){
 					TeamSeasonStats opponent = null;

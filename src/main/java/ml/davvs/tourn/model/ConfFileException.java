@@ -1,4 +1,4 @@
-package ml.davvs.tourn.model.persisted;
+package ml.davvs.tourn.model;
 
 public class ConfFileException extends Exception {
 	public ConfFileException(String message){

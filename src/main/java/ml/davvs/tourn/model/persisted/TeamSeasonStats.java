@@ -21,6 +21,10 @@ public class TeamSeasonStats {
 	public TeamSeasonStats() {
 		setId(UUID.randomUUID());
 	}
+	
+	public String toString() {
+		return team.getStaticInfo().getName();
+	}
 
 	public float getGuessedSkill() {
 		return guessedSkill;

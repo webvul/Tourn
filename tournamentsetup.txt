@@ -1,5 +1,0 @@
-6;Pro League;Pro League
-5;League 5;League 5A;League 5B
-4;League 4;League 4A;League 4B
-3;League 3;League 3A;League 3B
-2;League 2;League 2

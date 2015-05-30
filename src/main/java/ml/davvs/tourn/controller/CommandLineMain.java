@@ -5,15 +5,24 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
+import ml.davvs.tourn.model.ConfFileException;
 import ml.davvs.tourn.model.SeasonPhase;
 import ml.davvs.tourn.model.SeasonPhaseGuardException;
 import ml.davvs.tourn.model.SeasonPhaseRequiredException;
-import ml.davvs.tourn.model.persisted.ConfFileException;
 import ml.davvs.tourn.model.persisted.Division;
+import ml.davvs.tourn.model.persisted.GameRound;
 import ml.davvs.tourn.model.persisted.QualifierGroup;
 import ml.davvs.tourn.model.persisted.Season;
+import ml.davvs.tourn.model.persisted.SeasonException;
 import ml.davvs.tourn.model.persisted.Subdivision;
 import ml.davvs.tourn.model.persisted.Team;
 import ml.davvs.tourn.model.persisted.TeamSeasonStats;
@@ -23,19 +32,18 @@ import ml.davvs.tourn.view.ConsoleOut;
 public class CommandLineMain {
 
 	public static void main(String[] args) throws Exception {
-/*
+	/*
 		ConsoleOut consoleOut = new ConsoleOut();
 		DatabaseManager dbManager = new DatabaseManager();
 		dbManager.connect("localhost");
 	*/	
 		Tournament t = new Tournament();
 		t.setName("Testo tournamento League");
-		t.setSeasons(new ArrayList<Season>());
 		System.out.println("Starting command line main!");
 
 		System.out.println("Parsing input");
 
-		String fileSetupPath = "/Users/davvs/progg/tourn/tournamentsetup.txt";
+		String fileSetupPath = "/Users/davvs/progg/tourn/seasonsetup.txt";
 		createSeasonFromCSV(t, fileSetupPath);
 
 		Season season1 = t.getSeasons().get(0);
@@ -75,11 +83,14 @@ public class CommandLineMain {
 		season1.generateGames();
 		
 		System.out.println("Tournament created!");
-		Season s = t.getSeasons().get(t.getSeasons().size() - 1);
+		Season lastSeason = t.getSeasons().get(t.getSeasons().size() - 1);
 		ConsoleOut consoleOut = new ConsoleOut();
-		consoleOut.printSeasonDivisions(s);
+		//consoleOut.printSeasonDivisionsSetup(lastSeason);
 		
-		consoleOut.printAllGamesRounds(s);
+		// consoleOut.printAllGamesRounds(lastSeason);
+		
+		String scheduleCSV = "/Users/davvs/progg/tourn/seasonschedule.txt";
+		registerScheduleFromCSV(lastSeason, scheduleCSV);
 //		Subdivision subdivision = s.getDivisions().get(0).getSubDivisions().get(0);
 //		System.out.println("\n" + subdivision.getName());
 //		consoleOut.printGamesForSubdivision(subdivision, "  ");
@@ -87,49 +98,80 @@ public class CommandLineMain {
 		/*
 		dbManager.close();
 		*/
+		String gameResultCSV = "/Users/davvs/progg/tourn/gameresults.txt";
+		registerGameResultsFromCSV (t, lastSeason, gameResultCSV);
+
+		consoleOut.printSeasonDivisionsTable(lastSeason);
 	}
 
-	private static void createSeasonFromCSV(Tournament t, String filePath) throws NumberFormatException, IOException{
+	private static void registerScheduleFromCSV(Season season, String filePath) throws IOException, CSVParseException, ParseException {
 		File file = new File(filePath);
 		BufferedReader reader = null;
 
+		int expectedGameRoundCount = season.getGameRounds();
 	    reader = new BufferedReader(new FileReader(file));
 	    String text = null;
+	    DateFormat dateFormat = new SimpleDateFormat("YYYY-mm-dd");
+
+	    ArrayList<HashMap<String, Object>> rounds = new ArrayList<HashMap<String, Object>>();
+	    try {
+		    while ((text = reader.readLine()) != null) {
+		    	if (text.startsWith("#")){
+		    		continue;
+		    	}
+				String parts[] = text.split(";");
+				if (parts.length != 2) {
+					throw new CSVParseException("Line " + text + " contains a bad number of columns");
+				}
+				HashMap<String, Object> part = new HashMap<String, Object>();
+				part.put("gameStart", dateFormat.parse(parts[0]));
+				part.put("gameInterval", Integer.parseInt(parts[1]));
+				rounds.add(part);
+		    }
+		    if (expectedGameRoundCount != rounds.size()){
+		    	throw new CSVParseException("Invalid amount of game rounds");
+		    }
+		    for (int gid = 0; gid < expectedGameRoundCount; gid ++){
+		    	HashMap<String, Object> gameRoundData = rounds.get(gid);
+		    	Date gameStart = (Date)gameRoundData.get("gameStart");
+		    	Integer gameInterval = (Integer)gameRoundData.get("gameInterval");
+		    	for (Division d : season.getDivisions()){
+		    		for (Subdivision sd : d.getSubdivisions()){
+		    			if (sd.getGameRounds().size() <= gid){
+		    				continue;
+		    			}
+		    			GameRound gr  = sd.getGameRounds().get(gid);
+		    			gr.setGameStart(gameStart);
+		    			gr.setGameIntervalLengthDays(gameInterval);
+		    		}
+		    	}
+		    }
+	    } finally {
+	    	reader.close();
+	    }
+
+	    
+	}
+
+	private static void registerGameResultsFromCSV(Tournament tournament, Season season,
+			String filePath) throws NumberFormatException, IOException, SeasonException, ParseException, CSVParseException {
+		File file = new File(filePath);
+		Reader reader = null;
+		reader = new FileReader(file);
+
+	    season.registerGameResultsFromCSV(new FileReader(file));
+	    reader.close();
+		return;
+	}
+
+	private static void createSeasonFromCSV(Tournament t, String filePath) throws NumberFormatException, IOException, SeasonException{
+		File file = new File(filePath);
+		Reader reader = null;
+		reader = new FileReader(file);
 	    Season season = new Season(t);
-	    ArrayList<Division> divisions = new ArrayList<Division>();
-	    season.setDivisions(divisions);
-	    int totalSubDivisions = 0;
 	    t.getSeasons().add(season);
-	    while ((text = reader.readLine()) != null) {
-			String parts[] = text.split(";");
-			Division division = new Division(season);
-			divisions.add(division);
-			ArrayList<Subdivision> subdivisions = new ArrayList<Subdivision>(parts.length);
-			int level = Integer.parseInt(parts[0]);
-			String divisionName = parts[1];
-			division.setName(divisionName);
-			division.setLevel(level);
-			String subdivisionNames[] = new String[parts.length - 2];
-			for (int i = 0; i < parts.length - 2; i++) {
-				Subdivision subdivision = new Subdivision(division);
-				subdivision.setName(parts[i+2]);
-				subdivisions.add(subdivision);
-				subdivisionNames[i] = parts[i+1];
-			}
-			totalSubDivisions += subdivisionNames.length;
-			division.setSubdivisions(subdivisions);
-	    }
-	    for (int d = 0; d < divisions.size() - 1; d++){
-	    	Division upperDivision = divisions.get(d);
-	    	Division lowerDivision = divisions.get(d+1);
-	    	QualifierGroup qualifierGroup = new QualifierGroup();
-	    	qualifierGroup.setName("Qualfiers to " + upperDivision.getName());
-	    	qualifierGroup.setUpperDivision(upperDivision);
-	    	qualifierGroup.setLowerDivision(lowerDivision);
-	    	upperDivision.setLowerQualifierGroup(qualifierGroup);
-	    	lowerDivision.setUpperQualifierGroup(qualifierGroup);
-	    }
-	    season.setSubdivisionCount(totalSubDivisions);
+
+	    season.createFromCSV(new FileReader(file));
 	    reader.close();
 		return;
 	}
@@ -144,6 +186,9 @@ public class CommandLineMain {
 	    String text = null;
 
 	    while ((text = reader.readLine()) != null) {
+	    	if (text.startsWith("#")){
+	    		continue;
+	    	}
 			String parts[] = text.split(";");
 			
 			String name, email;

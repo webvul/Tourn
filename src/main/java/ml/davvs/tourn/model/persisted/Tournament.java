@@ -10,6 +10,7 @@ public class Tournament {
 
 	public Tournament() {
 		setId(UUID.randomUUID());
+		seasons = new ArrayList<Season>();
 	}
 	public UUID getId() {
 		return id;
@@ -25,9 +26,6 @@ public class Tournament {
 	}
 	public ArrayList<Season> getSeasons() {
 		return seasons;
-	}
-	public void setSeasons(ArrayList<Season> seasons) {
-		this.seasons = seasons;
 	}
 	public Team lookupTeam(String name, String email, float guessedSkill) {
 		//TODO Lookup if this email exists in seasons before...

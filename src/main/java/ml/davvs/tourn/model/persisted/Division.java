@@ -9,7 +9,7 @@ public class Division {
 	private UUID id;
 	private ArrayList<Subdivision> subdivisions;
 	private int level;
-	private int playerCount;
+	private int teamCount;
 	private String name;
 	private QualifierGroup upperQualifierGroup;
 	private QualifierGroup lowerQualifierGroup;
@@ -43,11 +43,11 @@ public class Division {
 	public String toString() {
 		return name;
 	}
-	public int getPlayerCount() {
-		return playerCount;
+	public int getTeamCount() {
+		return teamCount;
 	}
-	public void setPlayerCount(int playerCount) {
-		this.playerCount = playerCount;
+	public void setTeamCount(int teamCount) {
+		this.teamCount = teamCount;
 	}
 	public String getName() {
 		return name;
@@ -81,7 +81,7 @@ public class Division {
 				continue;
 			}
 			Subdivision compare = subdivisions.get(s);
-			if (best.getTeams().size() > compare.getTeams().size()) {
+			if (best.getTeamSeasonStats().size() > compare.getTeamSeasonStats().size()) {
 				bestId = s;
 				best = compare;
 			}
